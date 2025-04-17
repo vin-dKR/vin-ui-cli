@@ -26,7 +26,7 @@ pub fn find_project_root() -> Option<PathBuf> {
 
 
 //CLI rootdir
-pub fn get_cli_root() -> {
+pub fn get_cli_root() -> PathBuf {
     let exe_path = std::env::current_exe().expect("Failed to get executable path");
     let cli_root = exe_path.parent().unwrap().to_path_buf();
     cli_root
