@@ -1,8 +1,8 @@
 use colored::*;
-use dialoguer::{Confirm, Select};
+use dialoguer::Confirm;
 
 pub fn print_success(msg: &str) {
-    prinln!("{} {}", "SUCCESS:".green().bold(), msg);
+    println!("{} {}", "SUCCESS:".green().bold(), msg);
 }
 
 pub fn print_error(msg: &str) {

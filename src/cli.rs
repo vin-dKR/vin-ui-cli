@@ -1,33 +1,35 @@
-use clap::{App, Arg, SubCommand};
+use clap::{Arg, Command};
 use colored::*;
 
-pub fn build_cli() -> App<'static', 'static'> {
-    App.new("vin-ui")
+pub fn build_cli() -> Command {
+    Command::new("vin-ui")
         .version("1.0")
         .author("Vinod KR <vinodkumarmurmu62@gmail.com>")
-        .about("A cli UI Library that is independ of package managers")
+        .about("A CLI UI library that is independent of package managers")
         .subcommand(
-            SubCommand::with_name("add")
-                .about("add a component in your next js project.")
+            Command::new("add")
+                .about("Add a component to your Next.js project.")
                 .arg(
-                    Arg::with_name("COMPONENT_NAME")
+                    Arg::new("COMPONENT_NAME")
                         .help("The component to add.")
                         .required(true)
                         .index(1),
                 ),
         )
         .subcommand(
-            SubCommand::with_name("list").about("List all available components.")
+            Command::new("list")
+                .about("List all available components."),
         )
         .subcommand(
-            SubCommand::with_name("init")
+            Command::new("init")
                 .about("Initialize the UI components directory.")
                 .arg(
-                    Arg::with_name("help")
+                    Arg::new("help")
                         .long("help")
-                        .short("help")
-                        .help("Print help information"),
-                )
+                        .short('h') // short should be a single char
+                        .help("Print help information")
+                        .action(clap::ArgAction::Help), // tell clap it's the built-in help
+                ),
         )
 }
 

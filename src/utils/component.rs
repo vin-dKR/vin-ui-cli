@@ -1,10 +1,12 @@
 use std::fs;
-use std::path::{Path, PathBuffer};
+use std::path::Path;
 use anyhow::{Result, Context};
 use serde_json;
 
+use crate::models::component::ComponentConfig;
+
 pub fn load_component_config(config_path: &Path) -> Result<Option<ComponentConfig>> {
-    if config_path.exists() {
+    if !config_path.exists() {
         return Ok(None);
     }
 
@@ -19,9 +21,9 @@ pub fn load_component_config(config_path: &Path) -> Result<Option<ComponentConfi
 
 
 // Lists all available components in the templates directory
-pub fn get_all_components(template_dir: &Path) -> Result<Vec<Strinf>> {
+pub fn get_available_components(template_dir: &Path) -> Result<Vec<String>> {
     if !template_dir.exists() {
-        Ok(Vec::new())
+        return Ok(Vec::new());
     }
 
     let entries = fs::read_dir(template_dir)?;
@@ -30,7 +32,7 @@ pub fn get_all_components(template_dir: &Path) -> Result<Vec<Strinf>> {
     for entry in entries {
         if let Ok(entry) = entry {
             let path = entry.path();
-            if path.is_file() && path.extention().map_or(false, |ext| ext = "tsx") {
+            if path.is_file() && path.extension().map_or(false, |ext| ext == "tsx") {
                 if let Some(stem) = path.file_stem(){
                     if let Some(name) = stem.to_str() {
                         components.push(name.to_string());
@@ -65,9 +67,9 @@ pub fn add_utility(lib_dir: &Path, util_name: &str, template_dir: &Path) -> Resu
             }
 
             utils_content.push_str(&util_content);
-            fs:write(&utils_file, utils_content)?;
+            fs::write(&utils_file, utils_content)?;
 
-            Ok(())
+            return Ok(());
         }
     }
     Ok(())
