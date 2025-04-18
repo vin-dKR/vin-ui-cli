@@ -32,7 +32,7 @@ pub fn add_component(component_name: &str) -> Result<()> {
 
     //Check for comonents/ui dir
     let components_dir = project_root.join("components");
-    let ui_dir = project_root.join("ui");
+    let ui_dir = components_dir.join("ui");
 
     //create if not exists
     if !components_dir.exists() {

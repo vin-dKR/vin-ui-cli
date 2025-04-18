@@ -10,6 +10,7 @@ pub fn list_components() -> Result<()> {
     let template_dir = cli_root.join("templates");
 
     if !template_dir.exists() {
+        println!("cli:{}, temp:{}", cli_root.display(), template_dir.display());
         println!("{} Templates directory not found!", "ERROR".red().bold());
         return Ok(());
     }
