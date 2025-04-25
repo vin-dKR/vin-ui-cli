@@ -13,6 +13,13 @@ pub fn add_component(component_name: &str) -> Result<()> {
     let template_dir = cli_root.join("templates");
 
     let component_path = template_dir.join(format!("{}.tsx", component_name));
+    let config_path = template_dir.join(format!("{}.json", component_name));
+
+    if !component_path.exists() && !config_path.exists() {
+        print_error(&format!("Neither component '{}' nor its config found in templates!", component_name));
+        println!("Run 'vin-ui list' to see available components");
+        return Ok(());
+    }
 
     if !component_path.exists() {
         print_error(&format!("Component '{}' not found in templates!", component_name));
@@ -33,6 +40,7 @@ pub fn add_component(component_name: &str) -> Result<()> {
     //Check for comonents/ui dir
     let components_dir = project_root.join("components");
     let ui_dir = components_dir.join("ui");
+    let lib_dir = project_root.join("lib");
 
     //create if not exists
     if !components_dir.exists() {
@@ -88,8 +96,12 @@ pub fn add_component(component_name: &str) -> Result<()> {
             dest_file.display()
     ));
 
+
+
+
+
+
     //Check for component config file that specifies dependencies
-    let config_path = template_dir.join(format!("{}.json", component_name));
     if let Ok(Some(config)) = load_component_config(&config_path) {
         // check if d comp. has dependencies
         if let Some(dependencies) = config.dependencies {
@@ -158,6 +170,52 @@ pub fn add_component(component_name: &str) -> Result<()> {
                 }
             }
         } 
+
+
+        if let Some(additional_files) = config.additional_files {
+            print_info(&format!(
+                "Component '{}' requires the following additional files:",
+                component_name
+            ));
+            
+            for file_info in &additional_files {
+                println!("  - {}", file_info.source);
+                
+                // Determine destination based on file extension
+                let source_path = template_dir.join("utils").join(&file_info.source);
+                let dest_path = if file_info.source.ends_with(".tsx") || 
+                                  file_info.source.ends_with(".css") ||
+                                  file_info.source.ends_with(".scss") {
+                    // Component files go to components/ui
+                    ui_dir.join(&file_info.dest.clone().unwrap_or(file_info.source.clone()))
+                } else if file_info.source.ends_with(".ts") {
+                    // Utility files go to lib
+                    ensure_dir(&lib_dir)?;
+                    lib_dir.join(&file_info.dest.clone().unwrap_or(file_info.source.clone()))
+                } else {
+                    // Other files use specified destination or default to components/ui
+                    ui_dir.join(&file_info.dest.clone().unwrap_or(file_info.source.clone()))
+                };
+                
+                // Create parent directories if needed
+                if let Some(parent) = dest_path.parent() {
+                    ensure_dir(parent)?;
+                }
+                
+                // Copy the file
+                if source_path.exists() {
+                    fs::copy(&source_path, &dest_path)
+                        .context(format!("Failed to copy {} to {}", source_path.display(), dest_path.display()))?;
+                    print_success(&format!(
+                        "Additional file '{}' installed to {}",
+                        file_info.source,
+                        dest_path.display()
+                    ));
+                } else {
+                    print_warning(&format!("Additional file '{}' not found in templates/utils", file_info.source));
+                }
+            }
+        }
     }
 
     println!("\n{} Component installation complete! 🚀", "SUCCESS:".green().bold());
