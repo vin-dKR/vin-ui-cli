@@ -1,0 +1,112 @@
+.om-timeline {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.om-timeline-entries {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10rem;
+}
+
+.om-timeline.switch .om-timeline-entries {
+    gap: calc(var(--om-timeline-entries-gap) * 6);
+}
+
+.om-timeline-entry {
+    display: flex;
+    padding-top: 20px;
+    gap: var(--om-timeline-entry-gap);
+    position: relative;
+    width: 100%;
+    min-height: 200px; /* Ensure enough height for sticky elements */
+}
+
+.om-timeline-entry-header {
+    position: sticky;
+    top: 0rem;
+    z-index: 40;
+    display: flex;
+    align-items: start;
+    gap: var(--om-timeline-entry-title-gap);
+    width: auto;
+}
+
+
+.om-timeline-inner-circle {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background-color: rgb(38 38 38);
+    border: 1px solid rgb(64 64 64);
+}
+
+.om-timeline-entry-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.om-timeline-entry-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.om-timeline-line-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible; /* Allow SVG to extend without clipping */
+}
+
+.om-timeline-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.om-timeline-path {
+    stroke-width: var(--om-timeline-path-width);
+    fill: none;
+    stroke: url(#gradientBg);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.om-timeline-gradient-path {
+    stroke-width: var(--om-timeline-path-width);
+    fill: none;
+    stroke: url(#gradient);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+@media only screen and (max-width: 1000px) {
+    .om-timeline.switch .om-timeline-entries {
+        gap: calc(var(--om-timeline-entries-gap) * 3);
+    }
+
+    .om-timeline .om-timeline-entries .om-timeline-entry {
+        flex-direction: column !important;
+    }
+
+    .om-timeline .om-timeline-entries .om-timeline-entry .om-timeline-entry-header {
+        position: relative;
+        top: 0;
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .om-timeline .om-timeline-entries .om-timeline-entry.left-side .om-timeline-entry-content {
+        margin-left: 120px;
+    }
+
+    .om-timeline .om-timeline-entries .om-timeline-entry.right-side .om-timeline-entry-content {
+        margin-right: 120px;
+    }
+}

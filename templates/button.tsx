@@ -3,13 +3,13 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface ThreeDBtnProps {
-    href: string;
-    text: string;
+    href?: string;
+    text?: string;
     variant?: "black" | "white" | "purple" | "blue" | "red";
     className?: string;
 }
 
-const ThreeDBtn = ({
+const Button = ({
     href,
     text,
     variant = "purple",
@@ -40,9 +40,9 @@ const ThreeDBtn = ({
 
     return (
         <div className={frameClasses} onClick={handleClick}>
-            <Link target="_blank" href={href}>{text}</Link>
+            <Link target="_blank" href={href || ""}>{text || "This is a lil cute button"}</Link>
         </div>
-    );
+    )
 }
 
-export default ThreeDBtn
+export default Button

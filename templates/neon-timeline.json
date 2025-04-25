@@ -1,0 +1,16 @@
+{
+  "name": "Neon Timeline",
+  "description": "A customizable neon-timeline component",
+  "dependencies": ["tailwind-merge"],
+  "utils": ["neon-timeline.css", "timeline-data.ts"],
+  "additional_files": [
+    {
+      "source": "neon-timeline.css",
+      "description": "some styles"
+    },
+    {
+      "source": "timeline-data.ts",
+      "description": "Dummy data for the Timeline"
+    }
+  ]
+}
